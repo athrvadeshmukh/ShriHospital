@@ -1,0 +1,89 @@
+/* Shri Hospital theme overrides - static healthcare palette
+   This file enforces a consistent healthcare color scheme and disables
+   any color-changing animations or transitions introduced elsewhere.
+*/
+:root{
+  --primary: #13C5DD; /* teal */
+  --primary-700: #0ea6b3;
+  --secondary: #17449e; /* deep blue */
+  --accent: #28a745; /* green accent for success */
+  --white: #ffffff;
+  --muted: #6c757d;
+}
+
+/* Disable color-changing animations and transitions globally */
+*{
+  transition: none !important;
+  animation: none !important;
+}
+
+body, .site, .site-body{
+  color: #212529;
+  background-color: #ffffff;
+}
+
+a, a:hover, a:focus{
+  color: var(--primary) !important;
+}
+
+/* Primary buttons and variants */
+.btn-primary, .btn-primary:hover, .btn-primary:focus{
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--white) !important;
+}
+
+/* Fixed: valid selector without '!important' in selector list */
+.bg-primary{
+  background-color: var(--primary) !important;
+  color: var(--white) !important;
+}
+
+.text-primary, .text-primary a{
+  color: var(--primary) !important;
+}
+
+.navbar, .navbar .nav-link{
+  background-color: transparent !important;
+}
+
+.navbar .btn, .navbar .nav-link{
+  color: #0b1b2b !important;
+}
+
+/* Hero and banners should use calm light-blue/teal tones */
+.site-hero, .hero, .banner, .page-hero{
+  background: linear-gradient(180deg, #f4fbfc 0%, #ffffff 100%) !important;
+  color: #0b2b3b !important;
+}
+
+/* Override any remaining gradient or malformed rules that contained 45deg fragments */
+[class*="bg-"], .card, .panel, .service-card, .price-card{
+  background-image: none !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Make form controls consistent */
+.form-control, input, textarea, select{
+  border-radius: 6px !important;
+  border: 1px solid #dfe7ea !important;
+}
+
+/* Ensure badges, highlights use the healthcare palette */
+.badge-primary, .badge-primary[href], .badge-primary:focus{
+  background-color: var(--primary) !important;
+  color: var(--white) !important;
+}
+
+/* Ensure carousel dots/nav are neutral */
+.owl-theme .owl-dots .owl-dot span{ background: #c9dfe3 !important; }
+.owl-theme .owl-dots .owl-dot.active span{ background: var(--primary) !important; }
+
+/* Footer links */
+footer a{ color: var(--muted) !important; }
+
+/* Make sure any inline styles attempting dynamic color are overridden */
+[style*="linear-gradient"], [style*="45deg"]{ background: none !important; }
+
+/* Last-resort: override CSS variables if scripts try to change them */
+:root{ color-scheme: light; }
