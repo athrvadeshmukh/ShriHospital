@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shri Hospital - Health Insurance</title>
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style-starter.css">
+    <style>
+        :root{
+            --primary:#007bff;
+            --accent:#28a745;
+            --card-bg:#ffffff;
+            --muted:#6c757d;
+        }
+        body{
+            font-family: 'Muli', Arial, sans-serif;
+            margin:0;
+            padding:0;
+            background:#f7f9fb;
+            color:#222;
+            -webkit-font-smoothing:antialiased;
+        }
+        .page-header{
+            background:linear-gradient(90deg, rgba(0,123,255,0.08), rgba(40,167,69,0.04));
+            padding:48px 16px;
+            text-align:center;
+        }
+        .page-header h1{margin:0;font-size:28px;font-weight:700}
+        .page-header p{margin:8px 0 0;color:var(--muted)}
+
+        .container-narrow{max-width:1100px;margin:32px auto;padding:0 16px}
+
+        .filters{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:20px}
+        .filters button{border:1px solid #e2e6ea;background:#fff;padding:8px 14px;border-radius:6px;cursor:pointer}
+        .filters button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+        .insurance-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+        .card{background:var(--card-bg);border-radius:12px;box-shadow:0 6px 18px rgba(21,35,50,0.06);overflow:hidden;transition:transform .22s,box-shadow .22s}
+        .card:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(21,35,50,0.10)}
+        .card img{width:100%;height:180px;object-fit:cover}
+        .card-body{padding:18px}
+        .card-title{font-size:18px;font-weight:700;margin:0 0 8px}
+        .card-desc{color:var(--muted);font-size:14px;margin-bottom:12px}
+        .price{font-weight:700;color:var(--accent);font-size:18px;margin-bottom:12px}
+
+        .cta-row{display:flex;gap:8px;flex-wrap:wrap}
+        .btn{display:inline-block;padding:8px 14px;border-radius:7px;text-decoration:none;border:0;cursor:pointer}
+        .btn-primary{background:var(--primary);color:#fff}
+        .btn-outline{background:transparent;border:1px solid #ddd;color:#333}
+
+        .accordion{border-top:1px solid #f1f3f5;margin-top:12px}
+        .accordion-item{padding:12px 0;border-bottom:1px dashed #f1f3f5}
+        .accordion-item h4{cursor:pointer;margin:0;font-size:15px}
+        .accordion-content{max-height:0;overflow:hidden;transition:max-height .28s ease;padding-right:8px}
+        .accordion-content.open{max-height:500px;padding-top:8px}
+
+        /* Responsive */
+        @media (max-width:1000px){.insurance-grid{grid-template-columns:repeat(2,1fr)}}
+        @media (max-width:640px){
+            .insurance-grid{grid-template-columns:1fr}
+            .page-header{padding:28px 12px}
+        }
+
+        /* Modal for HealthBot booking */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:1200}
+        .modal{background:#fff;width:95%;max-width:420px;border-radius:10px;overflow:hidden}
+        .modal .modal-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #eee}
+        .modal .modal-body{height:520px}
+        .modal iframe{width:100%;height:100%;border:0}
+
+        /* Floating chat bot button (keeps consistent look) */
+        .chat-bot-button{position:fixed;bottom:16px;right:16px;background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:14px;cursor:pointer;z-index:1300}
+    </style>
+</head>
+<body>
+
+<!-- Floating Chat Bot Button -->
+<button class="chat-bot-button" id="openHealthBot">Talk with Health Bot!</button>
+
+<!-- HealthBot Modal -->
+<div id="botModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="botTitle">
+        <div class="modal-header">
+            <h3 id="botTitle" style="margin:0;font-size:16px">Shri Hospital HealthBot</h3>
+            <button id="closeBot" aria-label="Close" style="background:none;border:0;font-size:18px;cursor:pointer">&times;</button>
+        </div>
+        <div class="modal-body">
+            <iframe src="https://healthcare-bot-4zh3cgtuvfxc6.azurewebsites.net/" allow="microphone; camera;"></iframe>
+        </div>
+    </div>
+</div>
+
+<nav class="navbar navbar-expand-md navbar-light py-3">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">Shri Hospital</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="appointment.html">Book Appointment</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="login.html">Login/Signup</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="page-header">
+    <div class="container-narrow">
+        <h1>Health Insurance Plans</h1>
+        <p>Choose a plan that's right for you — compare benefits, prices and book instantly with our AI HealthBot.</p>
+    </div>
+</section>
+
+<main class="container-narrow">
+    <div class="filters" role="tablist" aria-label="Filter insurance plans">
+        <button class="filter-btn active" data-filter="all">All Plans</button>
+        <button class="filter-btn" data-filter="basic">Basic</button>
+        <button class="filter-btn" data-filter="comprehensive">Comprehensive</button>
+    </div>
+
+    <div class="insurance-grid" id="plansGrid">
+        <div class="card" data-type="basic">
+            <img src="assets/images/healthinsurancebasic.jpg" alt="Basic Health Insurance">
+            <div class="card-body">
+                <h3 class="card-title">Basic Health Insurance</h3>
+                <p class="card-desc">Affordable plan covering hospital stays, consultations and basic medications.</p>
+                <div class="price">₹1,000 / month</div>
+                <div class="cta-row">
+                    <button class="btn btn-primary book-btn">Book With AI</button>
+                    <button class="btn btn-outline details-btn">View Benefits</button>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <h4 class="accordion-toggle">What it covers</h4>
+                        <div class="accordion-content">
+                            <ul>
+                                <li>Hospitalization expenses</li>
+                                <li>Doctor consultations</li>
+                                <li>Basic diagnostic tests</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" data-type="comprehensive">
+            <img src="assets/images/comprehensive.jpg" alt="Comprehensive Health Insurance">
+            <div class="card-body">
+                <h3 class="card-title">Comprehensive Health Insurance</h3>
+                <p class="card-desc">Extensive coverage including specialist treatments, surgeries and higher limits.</p>
+                <div class="price">₹2,500 / month</div>
+                <div class="cta-row">
+                    <button class="btn btn-primary book-btn">Book With AI</button>
+                    <button class="btn btn-outline details-btn">View Benefits</button>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <h4 class="accordion-toggle">What it covers</h4>
+                        <div class="accordion-content">
+                            <ul>
+                                <li>Specialist consultations & surgeries</li>
+                                <li>Advanced diagnostics</li>
+                                <li>Higher room and procedure limits</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" data-type="comprehensive">
+            <img src="assets/images/healthinsurancebasic.jpg" alt="Family Plan">
+            <div class="card-body">
+                <h3 class="card-title">Family Plus</h3>
+                <p class="card-desc">Family bundled plan with maternity coverage and pediatric care.</p>
+                <div class="price">₹3,200 / month</div>
+                <div class="cta-row">
+                    <button class="btn btn-primary book-btn">Book With AI</button>
+                    <button class="btn btn-outline details-btn">View Benefits</button>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <h4 class="accordion-toggle">What it covers</h4>
+                        <div class="accordion-content">
+                            <ul>
+                                <li>Maternity & newborn care</li>
+                                <li>Pediatric consultations</li>
+                                <li>Family bundled discounts</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+<footer style="margin:40px 0;padding:18px 16px;background:#fff;border-top:1px solid #eef2f5;text-align:center">
+    <div class="container-narrow">
+        <p style="margin:0;color:var(--muted)">Questions? Email us at <a href="mailto:ShriHospital@email.com">ShriHospital@email.com</a></p>
+    </div>
+</footer>
+
+<script>
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            const filter = btn.getAttribute('data-filter');
+            document.querySelectorAll('#plansGrid .card').forEach(function(card){
+                if(filter==='all' || card.getAttribute('data-type')===filter){
+                    card.style.display='block';
+                } else { card.style.display='none'; }
+            });
+        });
+    });
+
+    // Accordion details toggle
+    document.querySelectorAll('.accordion-toggle').forEach(function(t){
+        t.addEventListener('click', function(){
+            const content = t.nextElementSibling;
+            const open = content.classList.toggle('open');
+            if(open){ content.style.maxHeight = content.scrollHeight + 'px'; }
+            else { content.style.maxHeight = null; }
+        });
+    });
+
+    // HealthBot modal handling
+    const modal = document.getElementById('botModal');
+    const openBtns = document.querySelectorAll('.book-btn');
+    const openHealthBot = document.getElementById('openHealthBot');
+    const closeBot = document.getElementById('closeBot');
+
+    function showBot(){ modal.style.display='flex'; modal.setAttribute('aria-hidden','false'); }
+    function hideBot(){ modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }
+
+    openBtns.forEach(b=>b.addEventListener('click', function(){ showBot(); }));
+    openHealthBot.addEventListener('click', showBot);
+    closeBot.addEventListener('click', hideBot);
+    modal.addEventListener('click', function(e){ if(e.target===modal) hideBot(); });
+
+    // Ensure accordion content heights are reset on window resize
+    window.addEventListener('resize', function(){
+        document.querySelectorAll('.accordion-content.open').forEach(function(c){ c.style.maxHeight = c.scrollHeight + 'px'; });
+    });
+</script>
+
+</body>
+</html>
